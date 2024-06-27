@@ -3,7 +3,7 @@ import { Stack } from "expo-router";
 export default function RootLayout() {
   return (
     <Stack>
-      <Stack.Screen name="app" />
+      <Stack.Screen name="(tabs)" />
     </Stack>
   );
 }

@@ -1,7 +1,7 @@
 // app/(tabs)/guest-list.tsx
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
 import GuestItem from '../../components/GuestItem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -22,13 +22,35 @@ const GuestListScreen = () => {
     fetchGuests();
   }, []);
 
+  const removeGuest = async (guestId) => {
+    try {
+      const updatedGuests = guests.filter(guest => guest.id !== guestId);
+      setGuests(updatedGuests);
+      await AsyncStorage.setItem('guests', JSON.stringify(updatedGuests));
+    } catch (error) {
+      console.error('Error removing guest', error);
+    }
+  };
+
+  const clearGuests = async () => {
+    try {
+      await AsyncStorage.removeItem('guests');
+      setGuests([]);
+    } catch (error) {
+      console.error('Error clearing guests', error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Guest List</Text>
+      <Button title="Eliminar Lista Completa" onPress={clearGuests} />
       <FlatList
         data={guests}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <GuestItem guest={item} />}
+        renderItem={({ item }) => (
+          <GuestItem guest={item} onDelete={removeGuest} />
+        )}
       />
     </View>
   );
