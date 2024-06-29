@@ -1,5 +1,3 @@
-// hooks/useAsyncStorage.ts
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const useAsyncStorage = () => {
@@ -20,8 +18,18 @@ export const useAsyncStorage = () => {
     }
   };
 
+  const getAllGuests = async () => {
+    try {
+      const value = await getItem('guests');
+      return value || [];
+    } catch (error) {
+      console.error('Error getting all guests', error);
+    }
+  };
+
   return {
     getItem,
     setItem,
+    getAllGuests,
   };
 };
