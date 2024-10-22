@@ -7,53 +7,97 @@ import * as Sharing from 'expo-sharing';
 import { LinearGradient } from 'expo-linear-gradient';
 import uuid from 'react-native-uuid';
 
+// Definición del componente funcional QrCodeGenerator
 const QrCodeGenerator = () => {
+  
+  // Hook useState para gestionar el estado del nombre del usuario.npm audit fix
+  // 'name' almacena el valor actual del nombre y 'setName' es la función para actualizarlo.
+  // Inicialmente, 'name' es una cadena vacía.
   const [name, setName] = useState('');
+  
+  // Hook useState para gestionar el estado del valor del código QR.
+  // 'qrValue' almacena el valor actual que será codificado en el QR y 'setQrValue' es la función para actualizarlo.
+  // Inicialmente, 'qrValue' es una cadena vacía.
   const [qrValue, setQrValue] = useState('');
+  
+  // Hook useRef para crear una referencia mutable que no causa re-renderizaciones al cambiar.
+  // 'qrCodeRef' se inicializa en null y será usado para referenciar el elemento del código QR.
   const qrCodeRef = useRef(null);
 
-  const handleGenerateQr = async () => {
-    if (!name) {
-      Alert.alert('No ingresaste un nombre para un invitado ;(');
-      return;
-    }
+  // Función asíncrona que maneja la generación del código QR y la adición del invitado a la lista.
+const handleGenerateQr = async () => {
+  
+  // Verifica si el nombre del invitado no está ingresado. Si es así, muestra una alerta y termina la ejecución de la función.
+  if (!name) {
+    Alert.alert('No ingresaste un nombre para un invitado ;(');
+    return;
+  }
 
-    const newGuest = {
-      id: uuid.v4(),
-      name,
-      qrCode: `qr-${name}-${uuid.v4()}`,
-    };
-
-    setQrValue(newGuest.qrCode);
-
-    try {
-      const storedGuests = await AsyncStorage.getItem('guests');
-      const guests = storedGuests ? JSON.parse(storedGuests) : [];
-      guests.push(newGuest);
-      await AsyncStorage.setItem('guests', JSON.stringify(guests));
-      Alert.alert('Invitado agregado exitosamente! ;)');
-      setName('');
-    } catch (error) {
-      console.error('Error saving guest', error);
-    }
+  // Genera un ID único para el nuevo invitado usando la biblioteca 'uuid'.
+  const uniqueId = uuid.v4();
+  
+  // Crea un nuevo objeto 'newGuest' con la información del invitado.
+  // Incluye el ID único, el nombre ingresado, un valor QR que incluye el ID, y una propiedad 'scaned' inicializada en false.
+  const newGuest = {
+    id: uniqueId,
+    name,
+    qrCode: `qr-${uniqueId}`,
+    scaned: false,
   };
 
-  const handleShareQr = () => {
-    if (!qrCodeRef.current) return;
+  // Actualiza el estado 'qrValue' con el valor QR generado para el nuevo invitado.
+  setQrValue(newGuest.qrCode);
 
-    qrCodeRef.current.toDataURL((dataURL) => {
-      const path = `${FileSystem.cacheDirectory}qr_code.png`;
-      FileSystem.writeAsStringAsync(path, dataURL, {
-        encoding: FileSystem.EncodingType.Base64,
+  try {
+    // Recupera la lista de invitados almacenada en AsyncStorage.
+    const storedGuests = await AsyncStorage.getItem('guests');
+    
+    // Si hay datos almacenados, los parsea a un array; si no, inicializa un array vacío.
+    const guests = storedGuests ? JSON.parse(storedGuests) : [];
+    
+    // Agrega el nuevo invitado a la lista de invitados.
+    guests.push(newGuest);
+    
+    // Guarda la lista actualizada de invitados en AsyncStorage.
+    await AsyncStorage.setItem('guests', JSON.stringify(guests));
+    
+    // Muestra una alerta confirmando que el invitado fue agregado exitosamente.
+    Alert.alert('Invitado agregado exitosamente! ;)');
+    
+    // Limpia el campo de nombre estableciendo su valor como una cadena vacía.
+    setName('');
+  } catch (error) {
+    // En caso de error al guardar el invitado, lo muestra en la consola.
+    console.error('Error saving guest', error);
+  }
+};
+
+// Función que maneja el compartir del código QR.
+const handleShareQr = () => {
+  // Verifica si la referencia al código QR existe. Si no, termina la ejecución.
+  if (!qrCodeRef.current) return;
+
+  // Convierte el código QR en una imagen en formato Base64.
+  qrCodeRef.current.toDataURL((dataURL: any) => {
+    
+    // Define una ruta en la caché del sistema de archivos donde se guardará la imagen del código QR.
+    const path = `${FileSystem.cacheDirectory}qr_code.png`;
+    
+    // Guarda la imagen en la ruta especificada en formato Base64.
+    FileSystem.writeAsStringAsync(path, dataURL, {
+      encoding: FileSystem.EncodingType.Base64,
+    })
+      .then(() => {
+        // Si la imagen se guardó correctamente, la comparte usando las opciones de compartir del dispositivo.
+        Sharing.shareAsync(path);
       })
-        .then(() => {
-          Sharing.shareAsync(path);
-        })
-        .catch((error) => {
-          console.error('Error sharing QR code', error);
-        });
-    });
-  };
+      .catch((error) => {
+        // En caso de error al compartir el código QR, lo muestra en la consola.
+        console.error('Error sharing QR code', error);
+      });
+  });
+};
+
 
   return (
     <LinearGradient

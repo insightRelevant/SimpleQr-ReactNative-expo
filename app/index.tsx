@@ -27,7 +27,7 @@ const Page = () => {
     <View style={styles.container}>
       {/* Tarjeta con fondo gradiente */}
       <LinearGradient
-        colors={['#ffafbd', '#ffc3a0']}
+        colors={['#ff9a9e', '#fecfef']}
         start={[0, 0]}
         end={[1, 1]}
         style={styles.card}
@@ -50,40 +50,46 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#f2f2f2',
   },
   card: {
-    borderRadius: 12,
-    width: '80%',
-    height: '60%',
+    borderRadius: 20,
+    width: '85%',
+    height: '55%',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 20,
+    padding: 30,
     shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3, // Para Android
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 5, // Para Android
   },
   linksContainer: {
     width: '100%',
     marginBottom: 20,
   },
   link: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    color: '#fff',
+    paddingVertical: 14,
+    paddingHorizontal: 25,
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    color: '#333',
     textAlign: 'center',
-    borderRadius: 8,
+    borderRadius: 30,
     fontSize: 18,
     fontWeight: 'bold',
     textDecorationLine: 'none',
-    marginBottom: 10, // Espacio entre cada botón
+    marginBottom: 15, // Más espacio entre botones
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2, // Sombras para botones en Android
   },
   guestCountCard: {
     position: 'absolute',
-    top: 20,
-    right: 20,
+    top: 30,
+    right: 30,
     zIndex: 10,
   },
 });

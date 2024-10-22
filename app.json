@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "QrAppDroid",
-    "slug": "QrAppDroid",
+    "slug": "qrappdroid",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -13,7 +13,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.geekoserver.QrAppDroid"
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +24,8 @@
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
-      ]
+      ],
+      "package": "com.geekoserver.QrAppDroid"
     },
     "web": {
       "bundler": "metro",
@@ -49,8 +51,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "854d5c80-4731-4373-af3e-c15fe6691b40"
+        "projectId": "915a2db8-406f-4c6e-bfc4-f6c949440902"
       }
-    }
+    },
+    "owner": "geekoserver"
   }
 }
